@@ -1,7 +1,0 @@
-ChunkSpy.lua
-
-基于 chunkspy.luaforge.net
-
-= 改进： =
-  * 1.改进的disassemble显示
-  * 2.直接读取lua源文件
