@@ -1,0 +1,19 @@
+#compile.
+
+= Introduction =
+
+Must be compiled with lua 5.1.x .
+Should be compiled in any environment that lua supports.
+
+I have tested compiling in generic linux-2.6, windows mingw, windows vs2008.
+
+
+= Details =
+
+ cd lua-5.1.4
+ cd src
+ make mingw
+or
+ make linux
+ cd luadec
+ make
