@@ -1,0 +1,46 @@
+= Fixed (testing files are in tested): =
+  * 1. fix the bug when is_vararg==7
+	varg_func.lua
+
+  * 2. OP_SETUPVAL should use UPVALUE(b) instead of UPVALUE(bc)
+
+  * 3. OP_VARARG should be R(A), R(A+1), ..., R(A+B-1) = vararg
+
+  * 4. dirty hack to skip error caused by some numeric FOR loops
+	for.lua
+
+  * 5. NEWTABLE, SETLIST can properly process {...} and lists that use 2 or more SETLIST (n>50)
+	setlist.lua
+
+  * 6. SETLIST, {[123]=1,"123"=2} can be properly processed
+	table_constructor.lua
+
+  * 7. SETLIST, reformat the output
+	table_formated.lua
+
+  * 8. VARARG, RETURN, CALL, TAILCALL, SETLIST can properly use ... or return values as args
+	varg_call.lua
+
+  * 9. FOR nest IF can be processed
+	for_if.lua , if_for.lua
+
+  * 10. fix some memory leaks
+
+  * 11. Full table support
+	Data.luac
+
+= Enhanced: =
+new options to decompile a file to seperated functions, use them when a lua file cause the program core dump, you can decompile other functions.
+  -nf num  decompile only specific nested function, use -pn option to get availble num
+  -dn      disable nested functions being decompiled
+  -pn      print nested functions structure and exit
+
+= Know Issues (testing files are in error): =
+  * 1. "local a,b = ..., ..." means "local a,b=..."
+  * 2. "local ,a" means "local a"
+  * 3. complex if..if will produce "do return end" ,that possibly means "else".
+	ch4.lua
+  * 4. complex while..while will produce "repeat..if..repeat --missing end".
+	while_while.lua
+  * 5. complex logic expression will produce a wrong result.
+	logic.lua
