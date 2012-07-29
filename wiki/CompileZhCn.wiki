@@ -9,10 +9,20 @@
 
 = 步骤 =
 
+mingw32:
+{{{
  cd lua-5.1.4
  cd src
- make mingw
-or
+ mingw32-make mingw
+ cd luadec
+ mingw32-make
+}}}
+
+linux:
+{{{
+ cd lua-5.1.4
+ cd src
  make linux
  cd luadec
  make
+}}}
