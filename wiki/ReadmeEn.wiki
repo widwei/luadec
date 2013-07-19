@@ -1,46 +1,49 @@
-= Fixed (testing files are in tested): =
-  * 1. fix the bug when is_vararg==7
-	varg_func.lua
+=luadec v2.1 r80 by viruscamp=
 
-  * 2. OP_SETUPVAL should use UPVALUE(b) instead of UPVALUE(bc)
+based on http://luadec.luaforge.net and https://github.com/sztupy/luadec51
 
-  * 3. OP_VARARG should be R(A), R(A+1), ..., R(A+B-1) = vararg
+http://code.google.com/p/luadec
 
-  * 4. dirty hack to skip error caused by some numeric FOR loops
-	for.lua
+viruscamp+luadec@gmail.com
 
-  * 5. NEWTABLE, SETLIST can properly process {...} and lists that use 2 or more SETLIST (n>50)
-	setlist.lua
+If luadec.exe crashed, try luadec_memwatch.exe, and please send me the lua source or binary and memwatch.log.
 
-  * 6. SETLIST, {[123]=1,"123"=2} can be properly processed
-	table_constructor.lua
+----
+==Fixes and Improvements:==
+  # compelete table support
+  # improved loop support
+  # more clear disassembled results
+  # read lua source files directly
+  # options to decompile only specific nested function
+  # process lua script with 255 or more functions
+  # more stable and less memory leaks
+  # can process consecutive 255 or more variable assignments
 
-  * 7. SETLIST, reformat the output
-	table_formated.lua
+----
+==Usage:==
+  # decompile lua binary file:
+    luadec abc.luac
+  # decompile lua source file for testing and comparing:
+    luadec abc.lua
+  # disassemble lua source or binary
+    luadec -dis abc.lua
+  # -pn print nested functions structure, could be used by -nf
+    {{{
+luadec -pn test.lua
+0
+ 1 
+  1_1
+ 2
+    }}}
+  # -nf decompile only specific nested function
+    luadec -nf 1 test.lua 
+  # -nf -dn decompile specific function without sub functions
+    luadec -dn -nf 1 test.lua
 
-  * 8. VARARG, RETURN, CALL, TAILCALL, SETLIST can properly use ... or return values as args
-	varg_call.lua
-
-  * 9. FOR nest IF can be processed
-	for_if.lua , if_for.lua
-
-  * 10. fix some memory leaks
-
-  * 11. Full table support
-	Data.luac
-
-= Enhanced: =
-new options to decompile a file to seperated functions, use them when a lua file cause the program core dump, you can decompile other functions.
-  -nf num  decompile only specific nested function, use -pn option to get availble num
-  -dn      disable nested functions being decompiled
-  -pn      print nested functions structure and exit
-
-= Know Issues (testing files are in error): =
-  * 1. "local a,b = ..., ..." means "local a,b=..."
-  * 2. "local ,a" means "local a"
-  * 3. complex if..if will produce "do return end" ,that possibly means "else".
-	ch4.lua
-  * 4. complex while..while will produce "repeat..if..repeat --missing end".
-	while_while.lua
-  * 5. complex logic expression will produce a wrong result.
-	logic.lua
+----
+==Know Bugs:==
+  # "local a,b = ..., ..." should be "local a,b=..."
+  # "local ,a" should be "local a"
+  # complex if..else may produce "do return end" ,that possibly means "else".
+  # complex logic expression will produce a wrong result
+  # performs badly on stripped lua binary files. use -s arg to test.
