@@ -1,7 +1,14 @@
-ChunkSpy.lua
+=ChunkSpy.lua=
+----
+based on http://chunkspy.luaforge.net
 
-基于 chunkspy.luaforge.net
+==Improvements:==
+  # more clear disassembled results
+  # read lua source files directly
 
-= 改进： =
-  * 1.改进的disassemble显示
-  * 2.直接读取lua源文件
+----
+基于 http://chunkspy.luaforge.net
+
+==改进：==
+  # 改进的disassemble显示
+  # 直接读取lua源文件
