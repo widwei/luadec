@@ -1,7 +1,10 @@
 #summary Todo List
 
   * lua5.1-tests 下 attrib.lua constructs.lua 无法运行的错误
+    * 76 可以处理 attrib.lua constructs.lua 
+    * 80 可以处理 attrib.lua 不能处理 constructs.lua
+    * 84 不能处理2个
 
-  * F->tables 不应该用 List 看 CloseTable 880
+  * ~~F->tables 不应该用 List 看 CloseTable 880~~
 
-  * DeleteFunction 不应该 ClearVpend ，应该在 PrintFunctionCheck 里面检查 vpend是否为空
+  * ~~DeleteFunction 不应该 ClearVpend ，应该在 PrintFunctionCheck 里面检查 vpend是否为空~~
