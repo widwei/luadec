@@ -1,9 +1,10 @@
 #summary Todo List
 
-  * lua5.1-tests 下 attrib.lua constructs.lua 无法运行的错误
-    * 76 可以处理 attrib.lua constructs.lua 
-    * 80 可以处理 attrib.lua 不能处理 constructs.lua
-    * 84 不能处理2个
+  * lua5.1-tests 下 attrib.lua constructs.lua main.lua 无法运行的错误
+    || || attrib.lua || constructs.lua || main.lua ||
+    || 76 || Y || Y || Y ||
+    || 80 || Y || N || Y ||
+    || 84 || N || N || N ||
 
   * ~~F->tables 不应该用 List 看 CloseTable 880~~
 
