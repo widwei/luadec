@@ -1,10 +1,11 @@
 #summary Todo List
 
-  * lua5.1-tests 下 attrib.lua constructs.lua main.lua 无法运行的错误
+  * ~~lua5.1-tests 下 attrib.lua constructs.lua main.lua 无法运行的错误~~
     || || attrib.lua || constructs.lua || main.lua || Main.lua(张松) ||
     || 76 || Y || Y || Y || N ||
     || 80 || Y || N || Y || Y ||
     || 84 || N || N(死循环) || N || N ||
+    || 90 || Y || Y || Y || Y ||
 
   * ~~F->tables 不应该用 List 看 CloseTable 880~~
 
