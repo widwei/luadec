@@ -1,4 +1,14 @@
 #summary Todo List
+  * 大概是没有删除 LogicExp 干净，导致的内存泄漏
+
+    ..\test\lua5.1-tests\constructs.lua
+
+    ..\test\Main.lua
+
+    ..\test\unluac-test\booleanassign02.lua
+
+    ..\test\unluac-test\combinebexpression04.lua
+
   * test\while\while.lua
 
   * test\while\while-if.lua
