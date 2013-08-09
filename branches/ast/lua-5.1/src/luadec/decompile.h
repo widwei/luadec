@@ -1,0 +1,211 @@
+#ifndef DECOMPILE_H
+#define DECOMPILE_H
+
+#include "structs.h"
+#include "StringBuffer.h"
+
+typedef struct BoolOp_ BoolOp;
+struct BoolOp_ {
+	ListItem super;
+	char * op1;
+	char * op2;
+	OpCode op;
+	int neg;
+	int pc;
+	int dest;
+};
+
+typedef struct Endif_ Endif;
+struct Endif_ {
+	int addr;
+	Endif * next;
+};
+
+typedef struct Statement_ Statement;
+struct Statement_ {
+	ListItem super;
+	char * code;
+	int line;
+	int indent;
+	int backpatch;
+};
+
+typedef enum {
+	FUNC_ROOT,
+	WHILE,
+	WHILE1,
+	REPEAT,
+	FORLOOP,
+	TFORLOOP
+} LoopType;
+
+typedef struct LoopItem_ LoopItem;
+struct LoopItem_ {
+	LoopItem * parent;
+	LoopItem * child;
+	LoopItem * prev;
+	LoopItem * next;
+
+	LoopType type;
+	int prep;
+	int start;
+	int body;
+	int end;
+	int next_code;
+
+	int indent;
+};
+
+
+typedef struct Function_ Function;
+struct Function_ {
+	/* program counter during symbolic interpretation */
+	int pc;
+	/* These act as the VM registers */
+	char * R[MAXARG_A];
+	/* These store the priority for the operation that stored the value in each
+	  register */
+	int Rprio[MAXARG_A];
+	/* Boolean values indicating if register holds a table */
+	int Rtabl[MAXARG_A];
+	/* Registers standing for local variables. */
+	int Rvar[MAXARG_A];
+	/* Registers used in call returns. */
+	int Rcall[MAXARG_A];
+	/* This is the Lua proto for the function */
+	const Proto * f;
+	/* This is a stack for creation of tables */
+	List tables;
+	/* 'a' of last CALL instruction -- used with 0-param CALLs */
+	int lastCall;
+	/* Pending code to be flushed */
+	/* FIXME: Needs a better data structure */
+	char * vpendVal[MAXARG_A];
+	int internal[MAXARG_A];
+	int Rpend[MAXARG_A];
+	/* State variables for the TEST instruction. */
+	int testpending;
+	int elsePending;
+	int elseStart;
+	/* Pending variable-registers */
+	List vpend;
+	/* Pending temp-registers */
+	IntSet* tpend;
+	/* Line number of detected constructs. */
+	LoopItem * loop_tree;
+	LoopItem * loop_ptr;
+	List breaks;
+	List continues;
+	//IntSet* repeats;
+	//IntSet* untils;
+	/* Control of do/end blocks. */
+	IntSet * do_opens;
+	IntSet * do_closes;
+	int released_local;
+	/* Skip for-variables on do-end check */
+	int ignore_for_variables;
+	int freeLocal;
+	/* boolean operations */
+	List bools;
+	Endif* nextEndif;
+
+	List statements;
+	int firstLine;
+	int lastLine;
+	/* holds the printed function */
+	StringBuffer * decompiledCode;
+	/* indent */
+	int indent;
+	int elseWritten;
+	int testjump;
+
+	/* internal variable stack */
+	int intspos;
+	int intbegin[100];
+	int intend[100];
+};
+
+typedef struct DecTableItem_ DecTableItem;
+struct DecTableItem_ {
+	ListItem super;
+	char * value;
+	int numeric;
+	char * key;
+};
+
+typedef struct DecTable_ DecTable;
+struct DecTable_ {
+	ListItem super;
+	int reg;
+	int topNumeric;
+	List numeric;
+	List keyed;
+	int keyedSize;
+	int arraySize;
+	int used;
+	int pc;
+	Function * F;
+};
+
+typedef struct Variable_ Variable;
+struct Variable_ {
+	ListItem super;
+	char * name;
+	int reg;
+};
+
+typedef struct IntListItem_ IntListItem;
+struct IntListItem_ {
+	ListItem super;
+	int value;
+};
+
+void SetR(Function * F, int r, StringBuffer * str, int prio);
+const char * GetR(Function * F, int r);
+
+typedef struct LogicExp_ LogicExp;
+struct LogicExp_ {
+	LogicExp * parent;
+	LogicExp * next;
+	LogicExp * prev;
+	LogicExp * subexp;
+	int is_chain;
+	char * op1;
+	char * op2;
+	OpCode op;
+	int dest;
+	int neg;
+};
+
+LogicExp * MakeExpNode(BoolOp * boolOp);
+LogicExp * MakeExpChain(int dest);
+LogicExp * FindLogicExpTreeRoot(LogicExp * exp);
+void DeleteLogicExpSubTree(LogicExp * exp);
+void DeleteLogicExpTree(LogicExp * exp);
+void PrintLogicItem(StringBuffer * str, LogicExp * exp, int inv, int rev);
+void PrintLogicExp(StringBuffer * str, int dest, LogicExp * exp, int inv_, int rev_);
+
+void AddStatement(Function * F, StringBuffer * str);
+void ShowState(Function * F);
+
+typedef enum {
+	DOT=0,
+	SELF=1,
+	TABLE=2
+} IndexType;
+void MakeIndex(Function * F, StringBuffer * str, char * rstr, IndexType type);
+
+void luaU_decompile(Proto * f, int lflag);
+void luaU_decompileFunctions(Proto * f, int lflag, int functions);
+void luaU_decompileNestedFunctions(Proto * f, int dflag, char * funcnumstr);
+
+BoolOp * NewBoolOp();
+BoolOp * MakeBoolOp(char * op1, char * op2, OpCode op, int neg,	int pc,	int dest);
+void ClearBoolOp(BoolOp * ptr, void * dummy);
+void DeleteBoolOp(BoolOp * ptr);
+
+int listUpvalues(Function * F, StringBuffer * str);
+int CompareProto(const Proto * f1, const Proto * f2, StringBuffer * str);
+int FunctionCheck(const Proto * f, int indent, StringBuffer * str);
+
+#endif
