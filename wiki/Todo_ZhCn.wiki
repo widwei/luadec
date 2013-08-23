@@ -1,10 +1,9 @@
 #summary Todo List
-  * 插入空语句(void statement) lable ::pc23:: 每一个 jmp
+  * 对每个jmp 插入空语句 label (void statement label) ::pc23::
     ** debug时 jmp 后用注释输出 跳到的 lable
     ** debug时 输出 lable
     ** goto 规则， 不能从外面的block跳到里面的block
     ** while 和 repeat 不在 loop 中体现
-    
 
   * 反编译到 AST(Abstract syntax tree) 抽象语法树
 
